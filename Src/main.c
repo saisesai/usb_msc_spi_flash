@@ -93,18 +93,18 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
-	printf("\r\n[MCU] STM32F103C8T6\r\n");
-	printf("[MCU] Chip ID: %08x\r\n", HAL_GetUIDw0());
-	printf("[MCU] SysClockFreq: %uHz\r\n", HAL_RCC_GetSysClockFreq());
-	if (sfud_init() != SFUD_SUCCESS) {
-		printf("[MCU] Falied to init sfud, abort!\r\n");
-		abort();
-	}
-	if (lfs_port_init() != LFS_ERR_OK) {
-		printf("[MCU] Falied to init lfs, abort!\r\n");
-		abort();
-	}
-	handle_boot_count();
+  printf("\r\n[MCU] STM32F103C8T6\r\n");
+  printf("[MCU] Chip ID: %08x\r\n", HAL_GetUIDw0());
+  printf("[MCU] SysClockFreq: %uHz\r\n", HAL_RCC_GetSysClockFreq());
+  if (sfud_init() != SFUD_SUCCESS) {
+    printf("[MCU] Falied to init sfud, abort!\r\n");
+    abort();
+  }
+  if (lfs_port_init() != LFS_ERR_OK) {
+    printf("[MCU] Falied to init lfs, abort!\r\n");
+    abort();
+  }
+  handle_boot_count();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,8 +114,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
-		HAL_Delay(500);
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
+    HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -168,15 +168,15 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void handle_boot_count(void) {
-	uint32_t boot_count = 0;
-	lfs_file_t boot_count_file = {0};
-	lfs_file_open(&lfs, &boot_count_file, "/boot_count", LFS_O_CREAT|LFS_O_RDWR);
-	lfs_file_read(&lfs, &boot_count_file, &boot_count, sizeof(boot_count));
-	boot_count += 1;
-	lfs_file_rewind(&lfs, &boot_count_file);
+  uint32_t boot_count = 0;
+  lfs_file_t boot_count_file = {0};
+  lfs_file_open(&lfs, &boot_count_file, "/boot_count", LFS_O_CREAT|LFS_O_RDWR);
+  lfs_file_read(&lfs, &boot_count_file, &boot_count, sizeof(boot_count));
+  boot_count += 1;
+  lfs_file_rewind(&lfs, &boot_count_file);
   lfs_file_write(&lfs, &boot_count_file, &boot_count, sizeof(boot_count));
-	lfs_file_close(&lfs, &boot_count_file);
-	printf("[MCU] boot count: %u\r\n", boot_count);
+  lfs_file_close(&lfs, &boot_count_file);
+  printf("[MCU] boot count: %u\r\n", boot_count);
 }
 /* USER CODE END 4 */
 
