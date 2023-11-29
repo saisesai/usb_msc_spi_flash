@@ -2,4 +2,5 @@ MDK-ARM/DebugConfig
 MDK-ARM/RTE
 MDK-ARM/usb_msc_spi_flash
 MDK-ARM/EventRecorderStub.scvd
+MDK-ARM/startup_stm32f103xb.lst
 MDK-ARM/usb_msc_spi_flash.uvguix.*
