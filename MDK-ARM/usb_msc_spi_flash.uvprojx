@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;../SFUD-1.1.0/inc;..\littlefs-2.8.1</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include;../Components/SFUD-1.1.0/inc;../Components/littlefs-2.8.1;../Components/CherryUSB-0.10.2;../Components/CherryUSB-0.10.2/common;../Components/CherryUSB-0.10.2/core;../Components/CherryUSB-0.10.2/port/fsdev;../Components/CherryUSB-0.10.2/class/msc;../Components/FatFS-0.15</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -403,6 +403,62 @@
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/dma.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>1</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
             <File>
               <FileName>spi.c</FileName>
@@ -537,42 +593,77 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>SFUD</GroupName>
+          <GroupName>Components/SFUD</GroupName>
           <Files>
             <File>
               <FileName>sfud.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SFUD-1.1.0\src\sfud.c</FilePath>
+              <FilePath>..\Components\SFUD-1.1.0\src\sfud.c</FilePath>
             </File>
             <File>
               <FileName>sfud_sfdp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SFUD-1.1.0\src\sfud_sfdp.c</FilePath>
+              <FilePath>..\Components\SFUD-1.1.0\src\sfud_sfdp.c</FilePath>
             </File>
             <File>
               <FileName>sfud_port.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\SFUD-1.1.0\port\sfud_port.c</FilePath>
+              <FilePath>..\Components\SFUD-1.1.0\port\sfud_port.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>littlefs</GroupName>
+          <GroupName>Components/CherryUSB</GroupName>
           <Files>
             <File>
-              <FileName>lfs.c</FileName>
+              <FileName>usbd_core.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\littlefs-2.8.1\lfs.c</FilePath>
+              <FilePath>..\Components\CherryUSB-0.10.2\core\usbd_core.c</FilePath>
             </File>
             <File>
-              <FileName>lfs_util.c</FileName>
+              <FileName>usbd_msc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\littlefs-2.8.1\lfs_util.c</FilePath>
+              <FilePath>..\Components\CherryUSB-0.10.2\class\msc\usbd_msc.c</FilePath>
             </File>
             <File>
-              <FileName>lfs_port.c</FileName>
+              <FileName>usb_dc_fsdev.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\littlefs-2.8.1\lfs_port.c</FilePath>
+              <FilePath>..\Components\CherryUSB-0.10.2\port\fsdev\usb_dc_fsdev.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_port_desc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Components\CherryUSB-0.10.2\usb_port_desc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_port_msc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Components\CherryUSB-0.10.2\usb_port_msc.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Components/FatFS</GroupName>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Components\FatFS-0.15\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Components\FatFS-0.15\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ffsystem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Components\FatFS-0.15\ffsystem.c</FilePath>
+            </File>
+            <File>
+              <FileName>ffunicode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Components\FatFS-0.15\ffunicode.c</FilePath>
             </File>
           </Files>
         </Group>

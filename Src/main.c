@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "spi.h"
 #include "usart.h"
 #include "usb.h"
@@ -25,8 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ff.h"
 #include "sfud.h"
-#include "lfs_port.h"
+#include "usb_port_msc.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,7 +49,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+FATFS fs = {0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,6 +61,8 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void handle_boot_count(void);
+
+void fatfs_init(void);
 /* USER CODE END 0 */
 
 /**
@@ -89,6 +93,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
@@ -100,11 +105,9 @@ int main(void)
     printf("[MCU] Falied to init sfud, abort!\r\n");
     abort();
   }
-  if (lfs_port_init() != LFS_ERR_OK) {
-    printf("[MCU] Falied to init lfs, abort!\r\n");
-    abort();
-  }
+  fatfs_init();
   handle_boot_count();
+  usb_port_msc_storage_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,6 +117,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    printf("Hello World!\r\n");
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_2);
     HAL_Delay(500);
   }
@@ -167,15 +171,59 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void fatfs_init(void) {
+  FRESULT rc = f_mount(&fs, "0:", 1);
+  if (rc != FR_OK) {
+    if (rc == FR_NO_FILESYSTEM) {
+      printf("[FATFS] no file system, abort!\r\n");
+    } else {
+      printf("[FATFS] rc= %u: failed to mount flash, abort!\r\n", rc);
+    }
+    abort();
+  }
+  printf("[FATFS] fs mount successful.\r\n");
+}
+
+static FIL boot_count_file = {0};
+static TCHAR boot_count_buffer[32] = {0};
 void handle_boot_count(void) {
+  UINT n;
+  TCHAR* rp = NULL;
+  volatile FRESULT rc;
   uint32_t boot_count = 0;
-  lfs_file_t boot_count_file = {0};
-  lfs_file_open(&lfs, &boot_count_file, "/boot_count", LFS_O_CREAT|LFS_O_RDWR);
-  lfs_file_read(&lfs, &boot_count_file, &boot_count, sizeof(boot_count));
+  // open file
+  rc = f_open(&boot_count_file, "/boot_count", FA_READ|FA_WRITE|FA_OPEN_ALWAYS);
+  if (rc != FR_OK) {
+    printf("rc=%u: failed to open boot_count.\r\n", rc);
+    return;
+  }
+  // getline
+  rp = f_gets(boot_count_buffer, 32, &boot_count_file);
+  if (rp != boot_count_buffer) {
+    printf("[MCU] failed to read boot_count.\r\n");
+  }
+  // get boot count
+  sscanf(boot_count_buffer, "%u", &boot_count);
   boot_count += 1;
-  lfs_file_rewind(&lfs, &boot_count_file);
-  lfs_file_write(&lfs, &boot_count_file, &boot_count, sizeof(boot_count));
-  lfs_file_close(&lfs, &boot_count_file);
+  memset(boot_count_buffer, 0, 32);
+  sprintf(boot_count_buffer, "%u", boot_count);
+  // write new book count
+  rc = f_rewind(&boot_count_file);
+  if (rc != FR_OK) {
+    printf("[MCU] rc=%u: failed to rewind boot_count.\r\n", rc);
+  }
+  rc = f_write(&boot_count_file, &boot_count_buffer, strlen(boot_count_buffer), &n);
+  if (rc != FR_OK) {
+    printf("[MCU] rc=%u: failed to write boot_count.\r\n", rc);
+  }
+  if(n != strlen(boot_count_buffer)) {
+    printf("[MCU] read wrong size of data: %u, expect %u!\r\n", n, sizeof(boot_count));
+  }
+  // close file
+  rc = f_close(&boot_count_file);
+  if (rc != FR_OK) {
+    printf("[MCU] rc=%u: failed to close boot_count.\r\n", rc);
+  }
   printf("[MCU] boot count: %u\r\n", boot_count);
 }
 /* USER CODE END 4 */

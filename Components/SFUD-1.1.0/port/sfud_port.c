@@ -61,17 +61,21 @@ static sfud_err spi_write_read(const sfud_spi *spi, const uint8_t *write_buf,
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);  // cs on
   if (write_size) { // write data
     SFUD_ASSERT(write_buf);
-    rc = HAL_SPI_Transmit(&hspi1, (uint8_t *)write_buf, write_size, 100);
+    //rc = HAL_SPI_Transmit(&hspi1, (uint8_t *)write_buf, write_size, 100);
+    rc = HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)write_buf, write_size);
     if (rc != HAL_OK) {
       return SFUD_ERR_WRITE;
     }
+    while(HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_BUSY_TX);
   }
   if (read_size) {  // read data
     SFUD_ASSERT(read_buf);
-    rc = HAL_SPI_Receive(&hspi1, (uint8_t *)read_buf, read_size, 100);
+    //rc = HAL_SPI_Receive(&hspi1, (uint8_t *)read_buf, read_size, 100);
+    rc = HAL_SPI_Receive_DMA(&hspi1, (uint8_t *)read_buf, read_size);
     if (rc != HAL_OK) {
       return SFUD_ERR_READ;
     }
+    while(HAL_SPI_GetState(&hspi1) == HAL_SPI_STATE_BUSY_RX);
   }
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);  // cs off
 #ifdef SFUD_DEBUG_MODE
