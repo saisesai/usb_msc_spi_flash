@@ -207,7 +207,7 @@ void handle_boot_count(void) {
   boot_count += 1;
   memset(boot_count_buffer, 0, 32);
   sprintf(boot_count_buffer, "%u", boot_count);
-  // write new book count
+  // write new boot count
   rc = f_rewind(&boot_count_file);
   if (rc != FR_OK) {
     printf("[MCU] rc=%u: failed to rewind boot_count.\r\n", rc);
@@ -217,7 +217,7 @@ void handle_boot_count(void) {
     printf("[MCU] rc=%u: failed to write boot_count.\r\n", rc);
   }
   if(n != strlen(boot_count_buffer)) {
-    printf("[MCU] read wrong size of data: %u, expect %u!\r\n", n, sizeof(boot_count));
+    printf("[MCU] write wrong size of data: %u, expect %u!\r\n", n, sizeof(boot_count));
   }
   // close file
   rc = f_close(&boot_count_file);
